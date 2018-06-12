@@ -1,0 +1,13 @@
+---
+
+- name: Vagrant Playbook for the Sandbox
+  hosts: devel
+  user: ubuntu
+  become: yes
+  gather_facts: yes
+
+  
+  roles:
+    - go          
+
+

@@ -1,0 +1,31 @@
+---
+# tasks file for go
+#
+
+- name: Include vars according distro
+  include_vars: "{{ item }}"
+  with_first_found:
+    #- "../vars/{{ ansible_os_family }}.yml"
+    - "../vars/{{ ansible_distribution }}.yml"
+    - "../vars/dummy.yml"
+  tags: [ always, go ]
+
+- name: Install using distro specific tasks
+  include: "{{ item }}"
+  with_first_found:
+    - "install/{{ ansible_distribution }}.yml"
+  tags: [ always, go ]
+ 
+- name: Install gvm {{ansible_user}}
+  shell: bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+      executable="/bin/bash"
+  become_user: "{{ansible_user}}"
+  ignore_errors: yes
+  tags: go
+
+- name: Install travis through Gem
+  gem:
+    name: travis
+    state: latest
+  tags: go
+

@@ -1,0 +1,40 @@
+---
+- name: Trust key for postgresql repo
+  apt_key: data="{{ lookup('file', 'postgresql.key') }}" state=present
+  tags: go
+
+- name: Add official postgresql repo
+  apt_repository:
+    repo: 'deb {{ apt_postgresql_repository_url }} {{ ansible_lsb.codename }}-pgdg main'
+    filename: pgdg
+  tags: go
+
+- name: Updating apt cache
+  apt:
+    update_cache: yes
+  tags: go  
+
+- name: Install postgresql database and Dependencies
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+      - git
+      - python-pip
+      - unzip
+      - python3
+      - python-minimal
+      - virtualenv  
+      - build-essential
+      - libreadline6-dev # some packages use it as pg_Repack
+      - golang
+      - ruby             # travis
+      - ruby-dev         # travis
+      - curl             # gvm requirements 
+      - mercurial
+      - make
+      - binutils
+      - bison
+      - gcc
+  tags: go
+
