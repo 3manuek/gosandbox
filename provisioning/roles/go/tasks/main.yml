@@ -23,6 +23,18 @@
   ignore_errors: yes
   tags: go
 
+# Related to https://github.com/moovweb/gvm/issues/275 applying fixing
+# $GOROOT_BOOTSTRAP
+- name: GVM bug fix on bootstrap
+  blockinfile:
+    path: /etc/profile
+    content: |
+      export GOROOT_BOOTSTRAP="$(go env GOROOT)"
+    state: present
+    insertafter: EOF
+  become: yes
+  tags: go
+
 - name: Install travis through Gem
   gem:
     name: travis
